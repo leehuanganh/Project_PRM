@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.example.project.ui_all.StatisticsActivity">
+
+    <!-- Thanh tiêu đề -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        app:title="Thống kê chi tiêu"
+        app:titleTextColor="@android:color/white"/>
+
+    <!-- Tab Layout để chuyển giữa Tuần và Tháng -->
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:tabIndicatorColor="@android:color/holo_orange_dark"
+        app:tabSelectedTextColor="@android:color/holo_blue_light"
+        app:tabTextColor="@android:color/darker_gray">
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tab_week"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tuần"/>
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tab_month"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tháng"/>
+    </com.google.android.material.tabs.TabLayout>
+
+    <!-- Biểu đồ chi tiêu -->
+    <com.github.mikephil.charting.charts.BarChart
+        android:id="@+id/barChart"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/white" />
+    <!-- Hiển thị tổng thu nhập và tổng chi tiêu -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:padding="12dp">
+
+        <!-- Tổng thu nhập -->
+        <TextView
+            android:id="@+id/tvTotalIncome"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Thu nhập: 0 VND"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/holo_green_dark"/>
+
+        <!-- Tổng chi tiêu -->
+        <TextView
+            android:id="@+id/tvTotalExpense"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Chi tiêu: 0 VND"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/holo_red_dark"/>
+    </LinearLayout>
+
+    <!-- Điều hướng chọn ngày/tháng -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:padding="8dp">
+
+        <!-- Nút Quay lại -->
+        <ImageButton
+            android:id="@+id/btnPrev"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_arrow_left"
+            android:contentDescription="Trước"/>
+
+        <!-- Hiển thị ngày/tháng hiện tại -->
+        <TextView
+            android:id="@+id/tvDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tháng 2, 2025"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:padding="8dp"
+            android:textColor="@color/black"/>
+
+        <!-- Nút Date Picker -->
+        <ImageButton
+            android:id="@+id/btnDatePicker"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_calendar"
+            android:contentDescription="Chọn ngày"/>
+
+        <!-- Nút Tiếp theo -->
+        <ImageButton
+            android:id="@+id/btnNext"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_arrow_right"
+            android:contentDescription="Sau"/>
+    </LinearLayout>
+
+</LinearLayout>

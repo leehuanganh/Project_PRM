@@ -1,0 +1,94 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@android:color/white"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".ui_all.AddTransactionActivity">
+
+    <!-- Thanh tiêu đề -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:title="Thêm giao dịch"
+        android:titleTextColor="@android:color/white"/>
+
+    <!-- Nhập số tiền -->
+    <EditText
+        android:id="@+id/edtAmount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Nhập số tiền"
+        android:inputType="numberDecimal"
+        android:textSize="18sp"
+        android:padding="12dp"
+        android:background="@android:color/darker_gray"
+        android:layout_marginTop="8dp"/>
+
+    <!-- Chọn danh mục -->
+    <Spinner
+        android:id="@+id/spinnerCategory"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"/>
+
+    <!-- Chọn ngày -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginTop="8dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ngày: "
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginEnd="8dp"/>
+
+        <TextView
+            android:id="@+id/tvDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Chọn ngày"
+            android:textSize="16sp"
+            android:padding="8dp"
+            android:textColor="@android:color/holo_blue_dark"/>
+
+        <ImageButton
+            android:id="@+id/btnPickDate"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_calendar"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Chọn ngày"/>
+    </LinearLayout>
+
+    <!-- Nhập ghi chú -->
+    <EditText
+        android:id="@+id/edtNote"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Ghi chú"
+        android:textSize="16sp"
+        android:padding="12dp"
+        android:background="@android:color/darker_gray"
+        android:layout_marginTop="8dp"/>
+
+    <!-- Nút lưu -->
+    <Button
+        android:id="@+id/btnSave"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Lưu giao dịch"
+        android:background="@android:color/holo_green_dark"
+        android:textColor="@android:color/white"
+        android:layout_marginTop="16dp"/>
+
+</LinearLayout>
