@@ -5,19 +5,28 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.project.R;
+import com.example.project.api.ApiService;
 import com.example.project.auth.LoginActivity;
 import com.example.project.auth.ChangePasswordActivity;
+import com.example.project.response.RegisterResponse;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class SettingsActivity extends AppCompatActivity {
 
+    private EditText edtName, edtEmail, edtPhone;
     private Switch switchSync, switchNotifications;
-    private Button btnChangePassword, btnLogout;
+    private Button btnUpdateProfile, btnChangePassword, btnLogout;
     private SharedPreferences sharedPreferences;
+    private ApiService apiService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,15 +56,13 @@ public class SettingsActivity extends AppCompatActivity {
             Toast.makeText(this, "Thông báo: " + (isChecked ? "Bật" : "Tắt"), Toast.LENGTH_SHORT).show();
         });
 
+        // xử lý cập nhật profile
+        btnUpdateProfile.setOnClickListener(this::updateProfile);
         // Xử lý đổi mật khẩu
-        btnChangePassword.setOnClickListener(v -> {
-            startActivity(new Intent(SettingsActivity.this, ChangePasswordActivity.class));
-        });
+        btnChangePassword.setOnClickListener(v -> startActivity(new Intent(this, ChangePasswordActivity.class)));
 
         // Xử lý đăng xuất
-        btnLogout.setOnClickListener(v -> {
-            logoutUser();
-        });
+        btnLogout.setOnClickListener(this::logoutUser);
     }
 
     private void loadSettings() {
@@ -66,13 +73,85 @@ public class SettingsActivity extends AppCompatActivity {
         switchNotifications.setChecked(isNotificationsEnabled);
     }
 
+    public void updateProfile(View view) {
+        int userId = sharedPreferences.getInt("userId", -1);
+        String name = edtName.getText().toString().trim();
+        String email = edtEmail.getText().toString().trim();
+        String phone = edtPhone.getText().toString().trim();
+
+        if (name.isEmpty() || email.isEmpty() || phone.isEmpty()) {
+            Toast.makeText(this, "Vui lòng nhập đầy đủ thông tin!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Call<RegisterResponse> call = apiService.updateProfile("update_profile", userId, name, email, phone);
+        call.enqueue(new Callback<RegisterResponse>() {
+            @Override
+            public void onResponse(Call<RegisterResponse> call, Response<RegisterResponse> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                    Toast.makeText(SettingsActivity.this, "Cập nhật thông tin thành công!", Toast.LENGTH_SHORT).show();
+
+                    // Cập nhật SharedPreferences
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("userName", name);
+                    editor.putString("userEmail", email);
+                    editor.putString("userPhone", phone);
+                    editor.apply();
+                } else {
+                    Toast.makeText(SettingsActivity.this, "Lỗi cập nhật thông tin!", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RegisterResponse> call, Throwable t) {
+                Toast.makeText(SettingsActivity.this, "Lỗi kết nối đến server!", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     private void saveSetting(String key, boolean value) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean(key, value);
         editor.apply();
     }
 
-    private void logoutUser() {
+//    private void updateProfile() {
+//        int userId = sharedPreferences.getInt("userId", -1);
+//        String name = edtName.getText().toString().trim();
+//        String email = edtEmail.getText().toString().trim();
+//        String phone = edtPhone.getText().toString().trim();
+//
+//        if (name.isEmpty() || email.isEmpty() || phone.isEmpty()) {
+//            Toast.makeText(this, "Vui lòng nhập đầy đủ thông tin!", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+//
+//        Call<RegisterResponse> call = apiService.updateProfile("update_profile", userId, name, email, phone);
+//        call.enqueue(new Callback<RegisterResponse>() {
+//            @Override
+//            public void onResponse(Call<RegisterResponse> call, Response<RegisterResponse> response) {
+//                if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+//                    Toast.makeText(SettingsActivity.this, "Cập nhật thông tin thành công!", Toast.LENGTH_SHORT).show();
+//
+//                    // Cập nhật SharedPreferences
+//                    SharedPreferences.Editor editor = sharedPreferences.edit();
+//                    editor.putString("userName", name);
+//                    editor.putString("userEmail", email);
+//                    editor.putString("userPhone", phone);
+//                    editor.apply();
+//                } else {
+//                    Toast.makeText(SettingsActivity.this, "Lỗi cập nhật thông tin!", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<RegisterResponse> call, Throwable t) {
+//                Toast.makeText(SettingsActivity.this, "Lỗi kết nối đến server!", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//    }
+
+    private void logoutUser(View view) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.clear();
         editor.apply();

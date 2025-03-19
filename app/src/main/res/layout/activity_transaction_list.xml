@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Bộ lọc giao dịch -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingBottom="8dp">
+
+        <!-- Nút chọn ngày -->
+        <Button
+            android:id="@+id/btnFilterDate"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Chọn ngày"
+            android:textSize="16sp"
+            android:background="@drawable/bg_border"
+            android:textColor="@android:color/black"
+            android:padding="8dp" />
+
+        <!-- Spinner chọn loại giao dịch -->
+        <Spinner
+            android:id="@+id/spinnerTransactionType"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:entries="@array/transaction_types"
+            android:background="@drawable/bg_border"
+            android:padding="8dp"/>
+
+        <!-- Nút lọc -->
+        <Button
+            android:id="@+id/btnApplyFilter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Lọc"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/bg_border"
+            android:padding="8dp"/>
+    </LinearLayout>
+
+    <!-- Danh sách giao dịch -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewTransactions"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:scrollbars="vertical"/>
+
+    <!-- Progress Bar khi tải dữ liệu -->
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_gravity="center"/>
+</LinearLayout>

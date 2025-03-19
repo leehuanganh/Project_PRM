@@ -1,3 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Project</string>
+    <!-- Danh sách loại giao dịch -->
+    <string-array name="transaction_types">
+        <item>Tất cả</item>
+        <item>Thu nhập</item>
+        <item>Chi tiêu</item>
+    </string-array>
+    <string name="app_name">Quản lý chi tiêu</string>
 </resources>
+    <!--<resources>-->
+    <!--    <string name="app_name">Project</string>-->
+    <!--</resources>-->

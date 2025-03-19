@@ -8,68 +8,100 @@
     android:padding="16dp"
     tools:context=".ui_all.SettingsActivity">
 
+    <!-- Tiêu đề -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Cài đặt"
-        android:textSize="22sp"
+        android:text="Cài đặt tài khoản"
+        android:textSize="20sp"
         android:textStyle="bold"
         android:gravity="center"
         android:paddingBottom="16dp" />
 
-    <LinearLayout
+    <!-- Nhập Họ và Tên -->
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingVertical="8dp">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Đồng bộ dữ liệu"
-            android:textSize="16sp" />
-
-        <Switch
-            android:id="@+id/switchSync"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
-
-    <LinearLayout
+        android:text="Họ và Tên:" />
+    <EditText
+        android:id="@+id/edtName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingVertical="8dp">
+        android:hint="Nhập họ và tên"
+        android:inputType="textPersonName" />
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Nhận thông báo"
-            android:textSize="16sp" />
+    <!-- Nhập Email -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Email:" />
+    <EditText
+        android:id="@+id/edtEmail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Nhập email"
+        android:inputType="textEmailAddress" />
 
-        <Switch
-            android:id="@+id/switchNotifications"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
+    <!-- Nhập Số Điện Thoại -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Số điện thoại:" />
+    <EditText
+        android:id="@+id/edtPhone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Nhập số điện thoại"
+        android:inputType="phone" />
 
+    <!-- Nút Cập Nhật Thông Tin -->
+    <Button
+        android:id="@+id/btnUpdateProfile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Cập nhật thông tin"
+        android:backgroundTint="@color/primary"
+        android:textColor="@android:color/white"
+        android:layout_marginTop="12dp" />
+
+    <!-- Công tắc Đồng bộ -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Cài đặt đồng bộ"
+        android:textStyle="bold"
+        android:layout_marginTop="20dp" />
+    <Switch
+        android:id="@+id/switchSync"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Đồng bộ dữ liệu tự động" />
+
+    <!-- Công tắc Thông báo -->
+    <Switch
+        android:id="@+id/switchNotifications"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Bật thông báo" />
+
+    <!-- Nút Đổi Mật Khẩu -->
     <Button
         android:id="@+id/btnChangePassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Đổi mật khẩu"
-        android:backgroundTint="@color/design_default_color_primary"
+        android:backgroundTint="@color/primary"
         android:textColor="@android:color/white"
-        android:layout_marginTop="16dp" />
+        android:layout_marginTop="12dp" />
 
+    <!-- Nút Đăng Xuất -->
     <Button
         android:id="@+id/btnLogout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Đăng xuất"
-        android:backgroundTint="@color/design_default_color_error"
+        android:backgroundTint="@color/red"
         android:textColor="@android:color/white"
-        android:layout_marginTop="16dp" />
+        android:layout_marginTop="12dp" />
+
 </LinearLayout>

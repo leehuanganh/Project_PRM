@@ -214,4 +214,36 @@ public class TransactionDAO {
         return totalIncome;
     }
 
+    public List<Transaction> getTransactionsWithLimit(int limit, int offset, String date, String type) {
+        List<Transaction> transactionList = new ArrayList<>();
+
+
+        String query = "SELECT * FROM transactions WHERE 1=1";
+        List<String> argsList = new ArrayList<>();
+
+        if (!date.isEmpty()) {
+            query += " AND date = ?";
+            argsList.add(date);
+        }
+        if (!type.isEmpty() && !type.equals("Tất cả")) {
+            query += " AND type = ?";
+            argsList.add(type);
+        }
+
+        query += " ORDER BY date DESC LIMIT ? OFFSET ?";
+        argsList.add(String.valueOf(limit));
+        argsList.add(String.valueOf(offset));
+
+        Cursor cursor = db.rawQuery(query, argsList.toArray(new String[0]));
+
+        if (cursor.moveToFirst()) {
+            do {
+                transactionList.add(createTransactionFromCursor(cursor));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return transactionList;
+    }
+
+
 }

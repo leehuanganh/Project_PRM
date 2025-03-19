@@ -63,4 +63,26 @@ public interface ApiService {
             @Field("transaction_id") int transactionId
     );
 
+    // update profile
+    @FormUrlEncoded
+    @POST("user_api.php")
+    Call<RegisterResponse> updateProfile(
+            @Field("action") String action,
+            @Field("user_id") int userId,
+            @Field("name") String name,
+            @Field("email") String email,
+            @Field("phone") String phone
+    );
+
+    @FormUrlEncoded
+    @POST("transaction_api.php")
+    Call<TransactionResponse> getTransactions(
+            @Field("action") String action,
+            @Field("user_id") int userId,
+            @Field("page") int page,
+            @Field("limit") int limit,
+            @Field("date") String date,
+            @Field("type") String type
+    );
+
 }

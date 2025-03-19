@@ -9,5 +9,8 @@
     <color name="white">#FFFFFFFF</color>
     <color name="red">#D32F2F</color>   <!-- Màu đỏ -->
     <color name="green">#388E3C</color> <!-- Màu xanh -->
-
+    <!-- Màu chính (Primary) -->
+    <color name="primary">#6200EE</color>  <!-- Màu tím mặc định của Material Design -->
+    <color name="primary_dark">#3700B3</color>  <!-- Màu tối hơn -->
+    <color name="primary_light">#BB86FC</color>  <!-- Màu sáng hơn -->
 </resources>

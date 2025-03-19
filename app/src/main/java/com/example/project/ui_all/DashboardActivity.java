@@ -22,22 +22,25 @@ public class DashboardActivity extends AppCompatActivity {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationDashboard);
         bottomNavigationView.setSelectedItemId(R.id.nav_statistics);
         bottomNavigationView.setOnItemSelectedListener(item -> {
-            int itemId = item.getItemId();
+            switch (item.getItemId()) {
+                case R.id.nav_home:
+                    startActivity(new Intent(this, TransactionListActivity.class));
+                    return true;
 
-            if (itemId == R.id.nav_home) {
-                startActivity(new Intent(this, TransactionListActivity.class));
-                return true;
-            } else if (itemId == R.id.nav_statistics) {
-                return true;  // Đã ở màn hình thống kê, không cần làm gì
-            } else if (itemId == R.id.nav_add_transaction) {
-                startActivity(new Intent(this, TransactionActivity.class));
-                return true;
-            } else if (itemId == R.id.nav_settings) {
-                startActivity(new Intent(this, SettingsActivity.class));
-                return true;
+                case R.id.nav_statistics:
+                    return true; // Đã ở màn hình thống kê, không cần chuyển
+
+                case R.id.nav_add_transaction:
+                    startActivity(new Intent(this, TransactionActivity.class));
+                    return true;
+
+                case R.id.nav_settings:
+                    startActivity(new Intent(this, SettingsActivity.class));
+                    return true;
+
+                default:
+                    return false;
             }
-
-            return false;
         });
     }
 }
