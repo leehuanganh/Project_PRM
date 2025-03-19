@@ -1,96 +1,106 @@
 <?php
-include 'config.php';
+header("Content-Type: application/json");
+require_once "config.php";
 
-// Xử lý request OPTIONS (CORS Preflight)
-if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
-    http_response_code(200);
-    exit();
+$response = ["success" => false];
+
+if ($_SERVER["REQUEST_METHOD"] == "POST" || $_SERVER["REQUEST_METHOD"] == "GET") {
+    $action = $_REQUEST["action"] ?? "";
+
+    switch ($action) {
+        case "register":
+            $email = $_POST["email"] ?? null;
+            $password = $_POST["password"] ?? null;
+
+            if (!$email || !$password) {
+                $response["error"] = "Thiếu email hoặc mật khẩu";
+                break;
+            }
+
+            $response = registerUser($conn, $email, $password);
+            break;
+
+        case "login":
+            $email = $_POST["email"] ?? null;
+            $password = $_POST["password"] ?? null;
+
+            if (!$email || !$password) {
+                $response["error"] = "Thiếu email hoặc mật khẩu";
+                break;
+            }
+
+            $response = loginUser($conn, $email, $password);
+            break;
+
+        case "change_password":
+            $user_id = $_POST["user_id"] ?? null;
+            $old_password = $_POST["old_password"] ?? null;
+            $new_password = $_POST["new_password"] ?? null;
+
+            if (!$user_id || !$old_password || !$new_password) {
+                $response["error"] = "Thiếu dữ liệu cần thiết";
+                break;
+            }
+
+            $response = changePassword($conn, $user_id, $old_password, $new_password);
+            break;
+
+        case "update_profile":
+            $user_id = $_POST["user_id"] ?? null;
+            $name = $_POST["name"] ?? null;
+            $email = $_POST["email"] ?? null;
+            $phone = $_POST["phone"] ?? null;
+
+            if (!$user_id || !$name || !$email || !$phone) {
+                $response["error"] = "Thiếu thông tin cập nhật";
+                break;
+            }
+
+            $response = updateProfile($conn, $user_id, $name, $email, $phone);
+            break;
+
+        default:
+            $response["error"] = "Hành động không hợp lệ!";
+    }
 }
 
-// Kiểm tra phương thức request có phải POST không
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    http_response_code(405); // Method Not Allowed
-    echo json_encode(["success" => false, "message" => "Chỉ hỗ trợ phương thức POST"], JSON_UNESCAPED_UNICODE);
-    exit();
-}
+echo json_encode($response, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+$conn->close();
 
-// Lấy dữ liệu JSON gửi từ client
-$inputJSON = file_get_contents("php://input");
-$input = json_decode($inputJSON, true);
-
-// Kiểm tra dữ liệu đầu vào có hợp lệ không
-if (!$input || !isset($input['action'])) {
-    http_response_code(400); // Bad Request
-    echo json_encode(["success" => false, "message" => "Thiếu hành động hoặc dữ liệu không hợp lệ"], JSON_UNESCAPED_UNICODE);
-    exit();
-}
-
-$action = $input['action'];
-
-switch ($action) {
-    case "register":
-        registerUser($conn, $input);
-        break;
-    case "login":
-        loginUser($conn, $input);
-        break;
-    default:
-        http_response_code(400); // Bad Request
-        echo json_encode(["success" => false, "message" => "Hành động không hợp lệ"], JSON_UNESCAPED_UNICODE);
-}
-
-// 🔹 Hàm đăng ký người dùng
-function registerUser($conn, $input) {
-    if (empty($input['email']) || empty($input['password'])) {
-        http_response_code(400);
-        echo json_encode(["success" => false, "message" => "Thiếu email hoặc mật khẩu"], JSON_UNESCAPED_UNICODE);
-        return;
+/** ================================
+ * 🟢 Đăng ký người dùng
+ * ================================ */
+function registerUser($conn, $email, $password) {
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        return ["success" => false, "error" => "Email không hợp lệ"];
     }
 
-    $email = trim($input['email']);
-    $password = password_hash($input['password'], PASSWORD_DEFAULT);
+    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
-    // Kiểm tra xem email đã tồn tại chưa
     $stmt = $conn->prepare("SELECT id FROM users WHERE email = ?");
     $stmt->bind_param("s", $email);
     $stmt->execute();
     $stmt->store_result();
 
     if ($stmt->num_rows > 0) {
-        http_response_code(409); // Conflict
-        echo json_encode(["success" => false, "message" => "Email đã tồn tại"], JSON_UNESCAPED_UNICODE);
-        $stmt->close();
-        return;
+        return ["success" => false, "error" => "Email đã tồn tại"];
     }
     $stmt->close();
 
-    // Thêm người dùng vào database
     $stmt = $conn->prepare("INSERT INTO users (email, password) VALUES (?, ?)");
-    $stmt->bind_param("ss", $email, $password);
-    
-    if ($stmt->execute()) {
-        http_response_code(201); // Created
-        echo json_encode(["success" => true, "message" => "Đăng ký thành công"], JSON_UNESCAPED_UNICODE);
-    } else {
-        http_response_code(500); // Internal Server Error
-        echo json_encode(["success" => false, "message" => "Đăng ký thất bại"], JSON_UNESCAPED_UNICODE);
-    }
+    $stmt->bind_param("ss", $email, $hashed_password);
 
-    $stmt->close();
+    if ($stmt->execute()) {
+        return ["success" => true, "message" => "Đăng ký thành công"];
+    } else {
+        return ["success" => false, "error" => "Đăng ký thất bại"];
+    }
 }
 
-// 🔹 Hàm đăng nhập người dùng
-function loginUser($conn, $input) {
-    if (empty($input['email']) || empty($input['password'])) {
-        http_response_code(400);
-        echo json_encode(["success" => false, "message" => "Thiếu email hoặc mật khẩu"], JSON_UNESCAPED_UNICODE);
-        return;
-    }
-
-    $email = trim($input['email']);
-    $password = $input['password'];
-
-    // Lấy mật khẩu từ database
+/** ================================
+ * 🟢 Đăng nhập người dùng
+ * ================================ */
+function loginUser($conn, $email, $password) {
     $stmt = $conn->prepare("SELECT id, password FROM users WHERE email = ?");
     $stmt->bind_param("s", $email);
     $stmt->execute();
@@ -101,19 +111,57 @@ function loginUser($conn, $input) {
         $stmt->fetch();
 
         if (password_verify($password, $hashed_password)) {
-            http_response_code(200); // OK
-            echo json_encode(["success" => true, "message" => "Đăng nhập thành công", "user_id" => $id], JSON_UNESCAPED_UNICODE);
+            return ["success" => true, "user_id" => $id, "message" => "Đăng nhập thành công"];
         } else {
-            http_response_code(401); // Unauthorized
-            echo json_encode(["success" => false, "message" => "Sai mật khẩu"], JSON_UNESCAPED_UNICODE);
+            return ["success" => false, "error" => "Sai mật khẩu"];
         }
     } else {
-        http_response_code(404); // Not Found
-        echo json_encode(["success" => false, "message" => "Email không tồn tại"], JSON_UNESCAPED_UNICODE);
+        return ["success" => false, "error" => "Email không tồn tại"];
     }
 
     $stmt->close();
 }
 
-$conn->close();
-?>
+/** ================================
+ * 🟢 Đổi mật khẩu
+ * ================================ */
+function changePassword($conn, $user_id, $old_password, $new_password) {
+    $stmt = $conn->prepare("SELECT password FROM users WHERE id = ?");
+    $stmt->bind_param("i", $user_id);
+    $stmt->execute();
+    $stmt->bind_result($hashed_password);
+    $stmt->fetch();
+
+    if (!password_verify($old_password, $hashed_password)) {
+        return ["success" => false, "error" => "Mật khẩu cũ không đúng"];
+    }
+
+    $stmt->close();
+    $new_hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
+    $stmt = $conn->prepare("UPDATE users SET password = ? WHERE id = ?");
+    $stmt->bind_param("si", $new_hashed_password, $user_id);
+
+    if ($stmt->execute()) {
+        return ["success" => true, "message" => "Đổi mật khẩu thành công"];
+    } else {
+        return ["success" => false, "error" => "Lỗi khi đổi mật khẩu"];
+    }
+}
+
+/** ================================
+ * 🟢 Cập nhật thông tin người dùng
+ * ================================ */
+function updateProfile($conn, $user_id, $name, $email, $phone) {
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        return ["success" => false, "error" => "Email không hợp lệ"];
+    }
+
+    $stmt = $conn->prepare("UPDATE users SET name = ?, email = ?, phone = ? WHERE id = ?");
+    $stmt->bind_param("sssi", $name, $email, $phone, $user_id);
+
+    if ($stmt->execute()) {
+        return ["success" => true, "message" => "Cập nhật thông tin thành công"];
+    } else {
+        return ["success" => false, "error" => "Lỗi khi cập nhật thông tin"];
+    }
+}
