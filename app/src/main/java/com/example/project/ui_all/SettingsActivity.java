@@ -10,6 +10,8 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
 import com.example.project.R;
 import com.example.project.api.ApiService;
 import com.example.project.auth.LoginActivity;
@@ -40,6 +42,15 @@ public class SettingsActivity extends AppCompatActivity {
         btnLogout = findViewById(R.id.btnLogout);
 
         sharedPreferences = getSharedPreferences("user_settings", MODE_PRIVATE);
+        btnUpdateProfile = findViewById(R.id.btnUpdateProfile);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+
+
+        // Gán tiêu đề tùy chỉnh
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle("Cài đặt tài khoản"); // ✅ Tiêu đề của từng màn hình
+        }
 
         // Load trạng thái cài đặt
         loadSettings();

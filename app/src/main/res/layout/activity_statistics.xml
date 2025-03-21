@@ -8,44 +8,31 @@
     android:orientation="vertical"
     tools:context="com.example.project.ui_all.StatisticsActivity">
 
-    <!-- Thanh tiêu đề -->
+    <!-- Toolbar -->
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
         app:title="Thống kê chi tiêu"
-        app:titleTextColor="@android:color/white"/>
+        app:titleTextColor="@android:color/black"
+        app:titleCentered="true"/>
 
-    <!-- Tab Layout để chuyển giữa Tuần và Tháng -->
+    <!-- Tab Layout để chuyển giữa Ngày, Tuần, Tháng -->
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:tabIndicatorColor="@android:color/holo_orange_dark"
         app:tabSelectedTextColor="@android:color/holo_blue_light"
-        app:tabTextColor="@android:color/darker_gray">
+        app:tabTextColor="@android:color/darker_gray"/>
 
-        <com.google.android.material.tabs.TabItem
-            android:id="@+id/tab_week"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Tuần"/>
-
-        <com.google.android.material.tabs.TabItem
-            android:id="@+id/tab_month"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Tháng"/>
-    </com.google.android.material.tabs.TabLayout>
-
-    <!-- Biểu đồ chi tiêu -->
-    <com.github.mikephil.charting.charts.BarChart
-        android:id="@+id/barChart"
+    <!-- ViewPager2 để hiển thị các fragment thống kê -->
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="@color/white" />
+        android:layout_weight="1"/>
+
     <!-- Hiển thị tổng thu nhập và tổng chi tiêu -->
     <LinearLayout
         android:layout_width="match_parent"
@@ -126,5 +113,4 @@
             android:src="@drawable/ic_arrow_right"
             android:contentDescription="Sau"/>
     </LinearLayout>
-
 </LinearLayout>

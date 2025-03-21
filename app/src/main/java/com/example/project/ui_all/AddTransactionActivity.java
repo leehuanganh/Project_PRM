@@ -6,6 +6,8 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
 import com.example.project.R;
 import com.example.project.database.TransactionDAO;
 import com.example.project.model.Transaction;
@@ -26,6 +28,14 @@ public class AddTransactionActivity extends AppCompatActivity {
         edtNote = findViewById(R.id.edtNote);
         spinnerCategory = findViewById(R.id.spinnerCategory);
         btnSave = findViewById(R.id.btnSave);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+
+
+        // Gán tiêu đề tùy chỉnh
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle("Thêm giao dịch"); // ✅ Tiêu đề của từng màn hình
+        }
 
         transactionDAO = new TransactionDAO(this);
 

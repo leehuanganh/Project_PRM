@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- Màn hình thống kê chi tiêu (Mặc định) -->
-    <item
-        android:id="@+id/nav_statistics"
-        android:icon="@drawable/ic_statistics"
-        android:title="Thống kê" />
-
-    <!-- Màn hình danh sách giao dịch -->
+    <!-- Màn hình trang chủ (Hiển thị bảng thống kê) -->
     <item
         android:id="@+id/nav_home"
         android:icon="@drawable/ic_home"
-        android:title="Danh sách" />
+        android:title="Trang chủ" />
+
+    <!-- Màn hình giao dịch (Hiển thị danh sách chi tiêu) -->
+    <item
+        android:id="@+id/nav_statistics"
+        android:icon="@drawable/ic_statistics"
+        android:title="Giao dịch" />
 
     <!-- Màn hình thêm giao dịch -->
     <item
         android:id="@+id/nav_add_transaction"
         android:icon="@drawable/ic_add"
-        android:title="Thêm" />
+        android:title="Thêm giao dịch" />
 
     <!-- Màn hình cài đặt -->
     <item
@@ -26,4 +26,3 @@
         android:title="Cài đặt" />
 
 </menu>
-

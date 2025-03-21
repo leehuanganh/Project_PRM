@@ -8,15 +8,15 @@
     android:padding="16dp"
     tools:context=".ui_all.SettingsActivity">
 
-    <!-- Tiêu đề -->
-    <TextView
+
+    <!-- Toolbar -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Cài đặt tài khoản"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:gravity="center"
-        android:paddingBottom="16dp" />
+        android:layout_height="?attr/actionBarSize"
+        app:title="Cài đặt tài khoản"
+        app:titleTextColor="@android:color/black"
+        app:titleCentered="true"/>
 
     <!-- Nhập Họ và Tên -->
     <TextView

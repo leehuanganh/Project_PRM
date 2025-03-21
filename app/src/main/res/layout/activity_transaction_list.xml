@@ -1,50 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:background="@android:color/background_light">
+
+    <!-- Toolbar -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@android:color/holo_blue_light"
+        app:title="Danh sách giao dịch"
+        app:titleTextColor="@android:color/white"
+        app:titleCentered="true"/>
 
     <!-- Bộ lọc giao dịch -->
-    <LinearLayout
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:paddingBottom="8dp">
+        android:layout_marginBottom="8dp"
+        app:cardElevation="4dp"
+        app:cardCornerRadius="8dp"
+        android:background="@android:color/white">
 
-        <!-- Nút chọn ngày -->
-        <Button
-            android:id="@+id/btnFilterDate"
-            android:layout_width="0dp"
-            android:layout_weight="1"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Chọn ngày"
-            android:textSize="16sp"
-            android:background="@drawable/bg_border"
-            android:textColor="@android:color/black"
-            android:padding="8dp" />
+            android:orientation="horizontal"
+            android:padding="12dp"
+            android:gravity="center_vertical">
 
-        <!-- Spinner chọn loại giao dịch -->
-        <Spinner
-            android:id="@+id/spinnerTransactionType"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:entries="@array/transaction_types"
-            android:background="@drawable/bg_border"
-            android:padding="8dp"/>
+            <!-- Nút chọn ngày -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnFilterDate"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="Chọn ngày"
+                android:textSize="14sp"
+                app:cornerRadius="8dp"
+                app:backgroundTint="@color/teal_700"
+                app:strokeWidth="2dp"
+                app:strokeColor="@color/black"
+                style="@style/Widget.MaterialComponents.Button"/>
 
-        <!-- Nút lọc -->
-        <Button
-            android:id="@+id/btnApplyFilter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Lọc"
-            android:layout_marginStart="8dp"
-            android:background="@drawable/bg_border"
-            android:padding="8dp"/>
-    </LinearLayout>
+            <!-- Spinner chọn loại giao dịch -->
+            <Spinner
+                android:id="@+id/spinnerTransactionType"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:background="@android:color/white"
+                android:popupBackground="@android:color/white"/>
+
+            <!-- Nút lọc -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnApplyFilter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Lọc"
+                android:textSize="14sp"
+                app:cornerRadius="8dp"
+                app:backgroundTint="@color/teal_700"
+                android:layout_marginStart="8dp"/>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
 
     <!-- Danh sách giao dịch -->
     <androidx.recyclerview.widget.RecyclerView
@@ -52,6 +76,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:padding="8dp"
+        android:clipToPadding="false"
         android:scrollbars="vertical"/>
 
     <!-- Progress Bar khi tải dữ liệu -->
@@ -61,4 +87,5 @@
         android:layout_height="wrap_content"
         android:visibility="gone"
         android:layout_gravity="center"/>
+
 </LinearLayout>

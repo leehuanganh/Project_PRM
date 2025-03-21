@@ -9,6 +9,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.project.R;
@@ -63,6 +64,14 @@ public class TransactionListActivity extends AppCompatActivity {
         recyclerViewTransactions.setAdapter(transactionAdapter);
 
         userId = getUserId(); // Lấy userId từ SharedPreferences
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+
+
+        // Gán tiêu đề tùy chỉnh
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle("Danh sách giao dịch"); // ✅ Tiêu đề của từng màn hình
+        }
 
         setupRecyclerViewScrollListener();
         setupFilterActions();

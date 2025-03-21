@@ -6,8 +6,11 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import com.example.project.model.Transaction;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 public class TransactionDAO {
     private SQLiteDatabase db;
@@ -103,28 +106,28 @@ public class TransactionDAO {
         return getTotalForCondition(COLUMN_DATE + " = ?", new String[]{date});
     }
 
-    // 🔹 Lấy tổng chi tiêu trong một tuần
-    public float getTotalExpenseForWeek(int week) {
-        return getTotalForCondition("strftime('%W', " + COLUMN_DATE + ") = ?", new String[]{String.valueOf(week)});
-    }
-
-    // 🔹 Lấy tổng chi tiêu trong một tháng
-    public float getTotalExpenseForMonth(int month) {
-        return getTotalForCondition("strftime('%m', " + COLUMN_DATE + ") = ?", new String[]{String.format("%02d", month)});
-    }
-
-    // 🔹 Lấy tổng chi tiêu trong một quý (3 tháng)
-    public float getTotalExpenseForQuarter(int quarter) {
-        int startMonth = (quarter - 1) * 3 + 1;
-        int endMonth = startMonth + 2;
-        return getTotalForCondition("strftime('%m', " + COLUMN_DATE + ") BETWEEN ? AND ?",
-                new String[]{String.format("%02d", startMonth), String.format("%02d", endMonth)});
-    }
-
-    // 🔹 Lấy tổng chi tiêu trong một năm
-    public float getTotalExpenseForYear(int year) {
-        return getTotalForCondition("strftime('%Y', " + COLUMN_DATE + ") = ?", new String[]{String.valueOf(year)});
-    }
+//    // 🔹 Lấy tổng chi tiêu trong một tuần
+//    public float getTotalExpenseForWeek(int week) {
+//        return getTotalForCondition("strftime('%W', " + COLUMN_DATE + ") = ?", new String[]{String.valueOf(week)});
+//    }
+//
+//    // 🔹 Lấy tổng chi tiêu trong một tháng
+//    public float getTotalExpenseForMonth(int month) {
+//        return getTotalForCondition("strftime('%m', " + COLUMN_DATE + ") = ?", new String[]{String.format("%02d", month)});
+//    }
+//
+//    // 🔹 Lấy tổng chi tiêu trong một quý (3 tháng)
+//    public float getTotalExpenseForQuarter(int quarter) {
+//        int startMonth = (quarter - 1) * 3 + 1;
+//        int endMonth = startMonth + 2;
+//        return getTotalForCondition("strftime('%m', " + COLUMN_DATE + ") BETWEEN ? AND ?",
+//                new String[]{String.format("%02d", startMonth), String.format("%02d", endMonth)});
+//    }
+//
+//    // 🔹 Lấy tổng chi tiêu trong một năm
+//    public float getTotalExpenseForYear(int year) {
+//        return getTotalForCondition("strftime('%Y', " + COLUMN_DATE + ") = ?", new String[]{String.valueOf(year)});
+//    }
 
     // 🔹 Hàm tổng quát lấy tổng thu nhập/chi tiêu theo khoảng thời gian
     public float getTotalForPeriod(String startDate, String endDate, boolean isIncome) {
@@ -209,7 +212,7 @@ public class TransactionDAO {
             if (cursor != null) {
                 cursor.close();
             }
-            db.close();
+
         }
         return totalIncome;
     }
@@ -245,5 +248,60 @@ public class TransactionDAO {
         return transactionList;
     }
 
+    // 🔹 Lấy tổng thu nhập theo **Tháng**
+    public float getTotalIncomeForMonth(Calendar calendar) {
+        return getTotalAmountForMonth(calendar, "income");
+    }
 
+    // 🔹 Lấy tổng chi tiêu theo **Tháng**
+    public float getTotalExpenseForMonth(Calendar calendar) {
+        return getTotalAmountForMonth(calendar, "expense");
+    }
+
+    private float getTotalAmountForMonth(Calendar calendar, String type) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM", Locale.getDefault());
+        String month = sdf.format(calendar.getTime());
+
+        String query = "SELECT SUM(amount) FROM transactions WHERE type=? AND strftime('%Y-%m', date) = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{type, month});
+
+        float totalAmount = 0;
+        if (cursor.moveToFirst()) {
+            totalAmount = cursor.getFloat(0);
+        }
+        cursor.close();
+        return totalAmount;
+    }
+
+    // 🔹 Lấy tổng thu nhập theo **Tuần**
+    public float getTotalIncomeForWeek(Calendar calendar) {
+        return getTotalAmountForWeek(calendar, "income");
+    }
+
+    // 🔹 Lấy tổng chi tiêu theo **Tuần**
+    public float getTotalExpenseForWeek(Calendar calendar) {
+        return getTotalAmountForWeek(calendar, "expense");
+    }
+
+    private float getTotalAmountForWeek(Calendar calendar, String type) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+
+        // Lấy ngày đầu tuần (Thứ Hai)
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+        String startDate = sdf.format(calendar.getTime());
+
+        // Lấy ngày cuối tuần (Chủ Nhật)
+        calendar.add(Calendar.DAY_OF_WEEK, 6);
+        String endDate = sdf.format(calendar.getTime());
+
+        String query = "SELECT SUM(amount) FROM transactions WHERE type=? AND date BETWEEN ? AND ?";
+        Cursor cursor = db.rawQuery(query, new String[]{type, startDate, endDate});
+
+        float totalAmount = 0;
+        if (cursor.moveToFirst()) {
+            totalAmount = cursor.getFloat(0);
+        }
+        cursor.close();
+        return totalAmount;
+    }
 }

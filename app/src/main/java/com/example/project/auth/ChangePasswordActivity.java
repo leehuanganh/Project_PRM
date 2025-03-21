@@ -7,6 +7,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
 import com.example.project.R;
 
 public class ChangePasswordActivity extends AppCompatActivity {
@@ -28,6 +30,12 @@ public class ChangePasswordActivity extends AppCompatActivity {
         sharedPreferences = getSharedPreferences("user_session", MODE_PRIVATE);
 
         btnSavePassword.setOnClickListener(v -> changePassword());
+        Toolbar toolbar = findViewById(R.id.toolbar);
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle("Đổi mật khẩu");
+        }
+
     }
 
     private void changePassword() {

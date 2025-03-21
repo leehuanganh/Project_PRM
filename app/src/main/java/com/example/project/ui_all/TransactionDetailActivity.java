@@ -1,16 +1,17 @@
 package com.example.project.ui_all;
 
-import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
 import com.example.project.R;
 import com.example.project.database.TransactionDAO;
 import com.example.project.model.Transaction;
-import java.util.Calendar;
 
 public class TransactionDetailActivity extends AppCompatActivity {
 
@@ -18,12 +19,19 @@ public class TransactionDetailActivity extends AppCompatActivity {
     private Button btnEdit, btnDelete;
     private TransactionDAO transactionDAO;
     private int transactionId = -1;
-    private String selectedDate = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_transaction_detail); // Dùng đúng layout
+        setContentView(R.layout.activity_transaction_detail);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+
+
+        // Gán tiêu đề tùy chỉnh
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle("Chi tiết giao dịch"); // ✅ Tiêu đề của từng màn hình
+        }
 
         // Ánh xạ UI
         tvAmount = findViewById(R.id.tvAmount);
@@ -34,9 +42,8 @@ public class TransactionDetailActivity extends AppCompatActivity {
         btnDelete = findViewById(R.id.btnDelete);
 
         transactionDAO = new TransactionDAO(this);
-
-        // Nhận ID giao dịch từ Intent
         transactionId = getIntent().getIntExtra("TRANSACTION_ID", -1);
+
 
         if (transactionId != -1) {
             loadTransactionDetails();
@@ -45,9 +52,23 @@ public class TransactionDetailActivity extends AppCompatActivity {
             finish();
         }
 
-        // Xử lý nút chỉnh sửa & xóa
-        btnEdit.setOnClickListener(v -> showEditTransactionDialog());
-        btnDelete.setOnClickListener(v -> deleteTransaction());
+        // Chỉnh sửa giao dịch
+        btnEdit.setOnClickListener(v -> {
+            Intent intent = new Intent(this, TransactionActivity.class);
+            intent.putExtra("TRANSACTION_ID", transactionId);
+            startActivity(intent);
+        });
+
+        // Xóa giao dịch
+        btnDelete.setOnClickListener(v -> {
+            boolean isDeleted = transactionDAO.deleteTransaction(transactionId);
+            if (isDeleted) {
+                Toast.makeText(this, "Xóa giao dịch thành công!", Toast.LENGTH_SHORT).show();
+                finish();
+            } else {
+                Toast.makeText(this, "Lỗi khi xóa!", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void loadTransactionDetails() {
@@ -57,23 +78,6 @@ public class TransactionDetailActivity extends AppCompatActivity {
             tvCategory.setText("Danh mục: " + transaction.getCategory());
             tvDate.setText("Ngày: " + transaction.getDate());
             tvNote.setText("Ghi chú: " + transaction.getNote());
-            selectedDate = transaction.getDate();
-        }
-    }
-
-    private void showEditTransactionDialog() {
-        // Chuyển đến màn hình chỉnh sửa giao dịch (có thể dùng cùng `TransactionActivity`)
-        TransactionActivity.start(this, transactionId);
-        finish();
-    }
-
-    private void deleteTransaction() {
-        boolean isDeleted = transactionDAO.deleteTransaction(transactionId);
-        if (isDeleted) {
-            Toast.makeText(this, "Xóa giao dịch thành công!", Toast.LENGTH_SHORT).show();
-            finish();
-        } else {
-            Toast.makeText(this, "Lỗi khi xóa!", Toast.LENGTH_SHORT).show();
         }
     }
 }
